@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+
+# Database
+db.sqlite3
+
+# Migrations (optional, but usually keep them)
+# If you want clean repo without migration history:
+# */migrations/*
+# !*/migrations/__init__.py
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            margin-top: 80px;
+            background: #f4f4f4;
+        }
+
+        button {
+            padding: 12px 25px;
+            margin: 15px;
+            cursor: pointer;
+        }
+
+        .box {
+            background: white;
+            width: 600px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .item {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>User Dashboard</h2>
+
+    <button onclick="loadBooks()">📚 View Books</button>
+    <button onclick="loadBorrows()">📖 My Borrows</button>
+
+    <div id="content"></div>
+</div>
+
+<script>
+
+const token = localStorage.getItem("access_token");
+
+if (!token) {
+    window.location.href = "/";
+}
+
+function loadBooks() {
+    fetch("/books/", {
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        let output = "<h3>Books</h3>";
+
+        data.forEach(book => {
+
+            let borrowBtn = "";
+
+            if (book.available_copies > 0) {
+                borrowBtn = `<button onclick="borrowBook(${book.id})">Borrow</button>`;
+            } else {
+                borrowBtn = `<span style="color:red;">Not Available</span>`;
+            }
+
+            output += `
+                <div style="margin:10px;">
+                    <b>${book.title}</b><br>
+                    Available: ${book.available_copies}/${book.total_copies}<br>
+                    ${borrowBtn}
+                </div>
+                <hr>
+            `;
+        });
+
+        document.getElementById("content").innerHTML = output;
+    });
+}
+function borrowBook(id) {
+    fetch("/borrow/" + id + "/", {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message || data.error);
+        loadBooks();  // refresh books
+    });
+}
+function loadBorrows() {
+    fetch("/borrow/my-borrows/", {
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if (data.length === 0) {
+            document.getElementById("content").innerHTML =
+                "<h3>No Active Borrows</h3>";
+            return;
+        }
+
+        let output = "<h3>My Active Borrows</h3>";
+
+        data.forEach(b => {
+            output += `
+                <div class="item">
+                    <b>${b.book_title}</b><br>
+                    Borrowed At: ${b.borrowed_at}
+                </div>
+                <hr>
+            `;
+        });
+
+        document.getElementById("content").innerHTML = output;
+    });
+}
+
+</script>
+
+</body>
+</html>
