@@ -1,7 +1,6 @@
 
 📚 Mini Library Management API
 
-Location: D:\Task_Submission\library_project
 
 This is a small Library Management System built using Django, Django REST Framework, SimpleJWT, and SQLite.
 
