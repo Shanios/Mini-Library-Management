@@ -51,9 +51,6 @@ Make sure Python is installed.
 
 1️⃣ Go to project folder
 
-Open Command Prompt and navigate to:
-
-D:\Task_Submission\library_project
 
 
 ---
