@@ -89,6 +89,10 @@ db.sqlite3
 5️⃣ Create Admin User
 
 python manage.py createsuperuser
+give admin name
+     email
+     password
+     
 
 This admin will:
 
